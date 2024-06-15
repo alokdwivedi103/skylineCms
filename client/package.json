@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "alok": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build"
+    }
   },
   "dependencies": {
     "react": "^18",
