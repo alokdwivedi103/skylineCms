@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-   "test": "npx lint-staged && npm run build"
+    "test": "npx lint-staged && npm run build"
   },
   "dependencies": {
     "react": "^18",
