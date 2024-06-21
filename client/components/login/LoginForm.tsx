@@ -1,14 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Input from "../custom/Input";
 import Button from "../custom/Button";
+import loginLogic from "./loginLogic";
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { formData, handleChange, handleSubmit } = loginLogic();
   return (
     <div className="px-10 py-9">
       {" "}
@@ -18,10 +15,11 @@ export default function LoginForm() {
           see what new we have to offer!
         </span>
       </p>
-      <form className="w-full my-6">
+      <form className="w-full my-6" onSubmit={handleSubmit}>
         <Input
           label="Email"
           name="email"
+          onChange={handleChange}
           value={formData.email}
           placeholder="Email"
         />
@@ -29,6 +27,7 @@ export default function LoginForm() {
           className="w-full"
           label="Password"
           name="password"
+          onChange={handleChange}
           placeholder="Password"
           value={formData.password}
         />
