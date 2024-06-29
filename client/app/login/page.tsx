@@ -12,7 +12,7 @@ export default function page() {
           src="/login/login.webp"
           width={412}
         />
-        <div className="w-1/2 h-full rounded-xl shadow-lg shadow-primaryColor bg-primaryColor/10 p-4 text-gray-600 text-center">
+        <div className="w-1/2 h-full rounded-xl shadow-lg shadow-primaryColor bg-primaryColor/10 p-4 text-gray-600 text-center overflow-y-scroll">
           <span className="text-2xl font-semibold">
             Skyline Publications:
             <br /> Empowering Legal Minds

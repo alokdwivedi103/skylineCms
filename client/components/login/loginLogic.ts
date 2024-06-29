@@ -1,33 +1,36 @@
 import { useRouter } from "next/navigation";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 
-export default function loginLogic(){
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-      });
-    const { push } = useRouter();
-    
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((pre) => ({
-            ...pre,
-            [name]: value
-        }))
-    }
+export interface LoginFormValues {
+  email: string;
+  password: string;
+}
 
-    const handleSubmit = (e: SyntheticEvent) => {
-        e.preventDefault();
-        if(formData.email === 'alok@gmail.com' && formData.password === 'alok'){
-            push('/');
-        } else {
-            setFormData({ email: '', password: '' });
-        }
+export default function loginLogic() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const { push } = useRouter();
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((pre) => ({
+      ...pre,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const { email, password } = formData;
+    if (email === "alok@gmail.com" && password === "alokaa") {
+      push("/");
     }
-    return {
-        formData,
-        handleChange,
-        handleSubmit,
-        setFormData,
-    }
+  };
+  return {
+    formData,
+    handleChange,
+    handleSubmit,
+    setFormData,
+  };
 }
