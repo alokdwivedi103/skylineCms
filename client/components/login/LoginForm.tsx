@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Input from "../custom/Input";
 import Button from "../custom/Button";
 import loginLogic, { LoginFormValues } from "./loginLogic"; // Assuming you have a type for LoginFormValues
 
 const LoginForm: React.FC = () => {
-  const { formData, handleChange, handleSubmit } = loginLogic();
+  const { formData, handleChange, handleSubmit, setFormData } = loginLogic();
 
   const validateForm = (values: LoginFormValues) => {
     const errors: Partial<LoginFormValues> = {};
@@ -24,12 +24,20 @@ const LoginForm: React.FC = () => {
       errors.password = "Password must be at least 6 characters";
     }
 
-    if(formData.email !== "alok@gmail.com" || formData.password !== "alokaa"){
+    if (formData.email !== "alok@gmail.com" || formData.password !== "alokaa") {
       errors.email = "Invalid email or password";
     }
 
     return errors;
   };
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      const { email, password } = JSON.parse(userData);
+      setFormData({ email, password });
+    }
+  }, []);
 
   return (
     <div className="px-10 py-9">
@@ -55,7 +63,11 @@ const LoginForm: React.FC = () => {
             value={formData.email}
             placeholder="Email"
           />
-          <ErrorMessage name="email" component="div" className="text-red-600 text-left" />
+          <ErrorMessage
+            name="email"
+            component="div"
+            className="text-red-600 text-left"
+          />
 
           <Field
             as={Input}
@@ -67,7 +79,11 @@ const LoginForm: React.FC = () => {
             placeholder="Password"
             type="password"
           />
-          <ErrorMessage name="password" component="div" className="text-red-600 text-left" />
+          <ErrorMessage
+            name="password"
+            component="div"
+            className="text-red-600 text-left"
+          />
 
           <Button className="mt-4" type="submit">
             Login

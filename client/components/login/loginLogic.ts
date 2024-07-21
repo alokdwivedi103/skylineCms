@@ -1,6 +1,6 @@
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
-
+import { ChangeEvent, useState } from "react";
 export interface LoginFormValues {
   email: string;
   password: string;
@@ -21,10 +21,12 @@ export default function loginLogic() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { email, password } = formData;
-    if (email === "alok@gmail.com" && password === "alokaa") {
-      push("/");
+    if (email === "alok@gmail.com" && password === "alokaa") {      
+      const { data, status } = await axios.post("http://localhost:9001/login", formData);
+      localStorage.setItem("userData", JSON.stringify(formData));
+      status === 200 ? push("/") : console.log(data.message);
     }
   };
   return {
