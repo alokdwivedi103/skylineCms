@@ -1,36 +1,30 @@
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
 
 export interface LoginFormValues {
   email: string;
   password: string;
 }
-
-export default function loginLogic() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+export const loginLogic = () => {
   const { push } = useRouter();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((pre) => ({
-      ...pre,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = () => {
-    const { email, password } = formData;
+  const handleSubmit = async (data: LoginFormValues) => {
+    console.log('HERE');
+    const { email, password } = data;
     if (email === "alok@gmail.com" && password === "alokaa") {
-      push("/");
+      try {
+        const { data: responseData, status } = await axios.post("http://localhost:9001/login", data);
+        localStorage.setItem("userData", JSON.stringify(data));
+        status === 200 ? push("/") : console.log(responseData.message);
+      } catch (error) {
+        console.error("Error during login:", error);
+      }
+    } else {
+      console.log("Invalid credentials");
     }
   };
+
   return {
-    formData,
-    handleChange,
     handleSubmit,
-    setFormData,
   };
-}
+};
