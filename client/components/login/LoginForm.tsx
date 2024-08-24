@@ -9,6 +9,7 @@ import { loginSchema } from "../../validations/login";
 
 import Input from "../custom/Input";
 import { Button } from "../ui/button";
+import InputError from "../errors/InputError";
 
 const LoginForm: React.FC = () => {
   const { handleSubmit: loginLogicSubmit } = loginLogic();
@@ -29,20 +30,15 @@ const LoginForm: React.FC = () => {
         </span>
       </p>
       <form onSubmit={handleSubmit(loginLogicSubmit)} className="w-full my-6">
-        <Input
-          label="Email"
-          {...register("email")}
-          placeholder="Email"
-        />
-        {errors.email && <div className="text-red-600 text-left">{errors.email.message}</div>}
-
+        <Input label="Email" {...register("email")} placeholder="Email" />
+        <InputError error={errors.email} />
         <Input
           label="Password"
           type="password"
           {...register("password")}
           placeholder="Password"
         />
-        {errors.password && <div className="text-red-600 text-left">{errors.password.message}</div>}
+        <InputError error={errors.password} />
 
         <Button className="mt-4 w-full" type="submit">
           Login
