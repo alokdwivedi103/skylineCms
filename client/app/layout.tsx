@@ -1,7 +1,14 @@
+import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+
 import { cn } from "@/lib/utils";
+
+import Header from "@/components/Global/Header";
+import Footer from "@/components/Global/Footer";
+
+import "./globals.css";
+import { headers } from "next/headers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -14,10 +21,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
+  const url = headers().get('x-url');
+  const showHeaderFooter = !url?.includes('/login');
   return (
     <html lang="en">
       <body
@@ -26,7 +35,9 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        {showHeaderFooter && <Header />}
         {children}
+        {showHeaderFooter && <Footer />}
       </body>
     </html>
   );

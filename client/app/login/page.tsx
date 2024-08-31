@@ -29,7 +29,7 @@ export default function page() {
   return (
     <section className="w-screen h-screen">
       <div className="container flex items-center h-full">
-        <div className="w-1/2">
+        <div className="w-1/2 h-auto">
         <Carousel className="w-full flex items-center relative">
           <CarouselPrevious className="absolute left-5 z-[1]" />
           <CarouselContent className="w-full">
