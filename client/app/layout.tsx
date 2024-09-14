@@ -1,14 +1,15 @@
 import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { headers } from "next/headers";
 
 import { cn } from "@/lib/utils";
 
 import Header from "@/components/Global/Header";
 import Footer from "@/components/Global/Footer";
+import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
-import { headers } from "next/headers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -31,12 +32,13 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "lg:min-h-screen bg-background font-sans antialiased",
           fontSans.variable
         )}
       >
         {showHeaderFooter && <Header />}
         {children}
+        <Toaster />
         {showHeaderFooter && <Footer />}
       </body>
     </html>

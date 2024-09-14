@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import LoginForm from "@/components/login/LoginForm";
 import {
   Carousel,
@@ -23,15 +22,15 @@ const OFFERINGS = [
   {
     image: "/login/login.webp",
     message:
-      "We do bussiness in all of the North-East and operate from Prayagraj",
+      "We do business in all of the North-East and operate from Prayagraj",
   },
 ];
 
 export default function page() {
   return (
-    <section className="w-screen h-screen">
-      <div className="container flex items-center h-full">
-        <div className="w-1/2 h-auto">
+    <section className="lg:w-screen h-screen">
+      <div className="lg:container px-2 flex flex-col lg:flex-row lg:items-center justify-center lg:justify-start h-full">
+        <div className="lg:w-1/2 h-auto hidden lg:block">
           <Carousel className="w-full flex items-center relative">
             <CarouselPrevious className="absolute left-5 z-[1]" />
             <CarouselContent className="w-full">
@@ -58,7 +57,7 @@ export default function page() {
             <CarouselNext className="absolute right-6 z-[1]" />
           </Carousel>
         </div>
-        <div className="w-1/2 text-primaryColor text-center mt-8">
+        <div className="lg:w-1/2 text-primaryColor text-center">
           <div className="text-2xl font-semibold flex items-center justify-center">
             <Image alt="Logo" height={50} src="/logo.webp" width={50} />
             Skyline Publications

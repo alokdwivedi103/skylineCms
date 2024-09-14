@@ -10,7 +10,7 @@ const TABS = [
 ];
 
 export default function HomeTabs() {
-  const [selectedTab, setSelectedTab] = useState("All");
+  const [selectedTab, setSelectedTab] = useState("all");
   return (
     <section className="w-full flex justify-center">
       <div className="bg-muted text-muted-foreground rounded-lg py-1 px-2">
