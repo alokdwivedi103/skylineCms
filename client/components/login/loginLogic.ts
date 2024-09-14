@@ -11,7 +11,7 @@ export const loginLogic = () => {
     try {
       const { error } = await fetchData("/login", { method: 'POST', body: JSON.stringify(data) })
       localStorage.setItem("userData", JSON.stringify(data));
-      !error ? window.location.href = "/" : toast({
+      !true ? window.location.href = "/" : toast({
         variant: "destructive",
         title: "Error Occured",
         description: String(error),

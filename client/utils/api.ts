@@ -15,7 +15,7 @@ type ApiResponse<T> = {
     // const fullURL = ${baseUrl || process.env.}/${url};
   
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`, {
+      const response = await fetch(`/api/${url}`, {
         headers: { ...headerOptions, 'Content-Type': 'application/json' },
         cache: 'no-store',
         ...restOptions,
