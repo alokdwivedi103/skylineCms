@@ -4,7 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { LoginFormValues, loginLogic } from "./loginLogic";
+import { LoginFormValues, useLogin } from "./loginLogic";
 import { loginSchema } from "../../validations/login";
 
 import Input from "../custom/Input";
@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 import InputError from "../errors/InputError";
 
 const LoginForm: React.FC = () => {
-  const { handleSubmit: loginLogicSubmit } = loginLogic();
+  const { handleSubmit: loginLogicSubmit } = useLogin();
   const {
     register,
     handleSubmit,

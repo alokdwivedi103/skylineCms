@@ -5,7 +5,7 @@ export interface LoginFormValues {
   email: string;
   password: string;
 }
-export const loginLogic = () => {
+export const useLogin = () => {
   const { toast } = useToast();
   const handleSubmit = async (data: LoginFormValues) => {
     try {
