@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { HomeIcon, LogInIcon, SidebarClose, SidebarOpen } from "lucide-react";
+import { HomeIcon, LogInIcon, SidebarClose, SidebarOpen  } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const SIDEBAR_LIST = [
@@ -23,7 +23,7 @@ export default function Sidebar() {
 
       <label
         htmlFor="sidebar-toggle"
-        className="fixed top-4 left-4 z-30 p-2 text-secondary-foreground rounded-md cursor-pointer peer-checked:hidden"
+        className="fixed top-2.5 lg:top-4 left-0 lg:left-4 z-30 p-2 text-secondary-foreground rounded-md cursor-pointer peer-checked:hidden"
       >
         <SidebarOpen className="h-5 w-5 hover:scale-125 hover:transition-all hover:duration-200 shrink-0 transition-transform duration-200" />
       </label>
