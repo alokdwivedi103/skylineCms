@@ -27,7 +27,3 @@ export default function middleware(request: NextRequest) {
 
   return response;
 }
-
-export const config = {
-  runtime: 'nodejs',  // Use Node.js environment instead of Edge
-};
