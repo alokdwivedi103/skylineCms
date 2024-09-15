@@ -1,23 +1,21 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse, type NextRequest, userAgent } from 'next/server';
 
 export default function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
-  // const userAgentHeader = requestHeaders.get('user-agent') || '';
-
-  // Simple regex matching for detecting mobile devices
-  // const isMobile = /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(userAgentHeader);
-
+  // const userAgent = requestHeaders.get('user-agent');
+  // const isMobile = Boolean(userAgent?.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i));
+  const { device } = userAgent(request);
+  const isMobile = device.type === 'mobile';
   const url = new URL(request.url);
-  const { origin, pathname } = url;
-
-  // Set custom headers
-  requestHeaders.set('x-url', request.url.replace(origin, ''));
+  const { origin } = url;
+  const { pathname } = url;
+  requestHeaders.set('x-url', request.url.replace(origin,''));
   requestHeaders.set('x-origin', origin);
   requestHeaders.set('x-pathname', pathname);
 
-  // if (isMobile) {
-  //   requestHeaders.set('x-mobile', 'true');
-  // }
+  if (isMobile) {
+    requestHeaders.set('x-mobile', 'true');
+  }
 
   const response = NextResponse.next({
     request: {
