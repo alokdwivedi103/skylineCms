@@ -1,32 +1,48 @@
-"use client";
-
-import { cn } from "@/lib/utils";
-import { useState } from "react";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 
 const TABS = [
-  { name: "All", value: "all" },
-  { name: "Recently Added", value: "recent" },
-  { name: "Categories", value: "category" },
+  {
+    name: "All",
+    value: "all",
+    items: [
+      { name: "New Tab", value: "newTab" },
+      { name: "Old Tab", value: "oldTab" },
+    ],
+  },
+  { name: "Recently Added", value: "recent", items: [
+    { name: "New Tab", value: "newTab" },
+    { name: "Old Tab", value: "oldTab" },
+  ], },
+  { name: "Categories", value: "category", items: [
+    { name: "New Tab", value: "newTab" },
+    { name: "Old Tab", value: "oldTab" },
+  ], },
 ];
 
 export default function HomeTabs() {
-  const [selectedTab, setSelectedTab] = useState("all");
+  const filteredTabs = TABS.filter((tab) => tab.items?.length);
   return (
-    <section className="w-full flex justify-center">
-      <div className="bg-muted text-muted-foreground rounded-lg py-1 px-2">
-        {TABS.map((tab) => (
-          <button
-            key={tab.value}
-            className={cn(
-              "my-1 rounded-sm py-1 px-3 text-sm flex-shrink-0",
-              selectedTab === tab.value && "bg-background text-primary"
-            )}
-            onClick={() => setSelectedTab(tab.value)}
-          >
-            {tab.name}
-          </button>
-        ))}
-      </div>
-    </section>
+    <Menubar className="w-fit mx-auto mt-4">
+      {filteredTabs.map(({ name, value, items = [] }) => (
+        <MenubarMenu key={value}>
+          <MenubarTrigger>{name}</MenubarTrigger>
+          <MenubarContent>
+            {items.map(({ name, value }, index) => (
+              <>
+                <MenubarItem className="sm:w-16 w-20 lg:w-auto" key={value}>{name}</MenubarItem>
+                {index !== items.length - 1 && <MenubarSeparator />}
+              </>
+            ))}
+          </MenubarContent>
+        </MenubarMenu>
+      ))}
+    </Menubar>
   );
 }
