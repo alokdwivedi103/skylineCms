@@ -26,7 +26,6 @@ const SIDEBAR_LIST = [
 ];
 
 export default function Sidebar() {
-  console.log("changes")
   const url = headers().get("x-url");
   const filteredList = SIDEBAR_LIST.filter(item => item.path !== url);
   return (
