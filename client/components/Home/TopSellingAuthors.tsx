@@ -1,23 +1,6 @@
 import Image from "next/image"
 
-const AUTHORS = [
-    {
-        name: "Girish Engine",
-        image: "/images/Home/author1.webp",
-    },
-    {
-        name: "Maheshara",
-        image: "/images/Home/author1.webp",
-    },
-    {
-        name: "Nagesh Kumar",
-        image: "/images/Home/author1.webp",
-    },
-    {
-        name: "Anujan",
-        image: "/images/Home/author1.webp",
-    }
-]
+import { AUTHORS } from "@/constants/pages/HOME"
 
 export default function TopSellingAuthors() {
   return (
