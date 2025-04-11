@@ -28,6 +28,7 @@ export default function RootLayout({
 }>) {
   const url = headers().get('x-url');
   const showHeaderFooter = !url?.includes('/login');
+  console.log(url);
   return (
     <html lang="en">
       <body
