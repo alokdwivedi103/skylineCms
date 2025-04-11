@@ -27,8 +27,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   const url = headers().get('x-url');
-  const showHeaderFooter = !url?.includes('/login');
-  console.log(url);
+  const showHeaderFooter = !url?.includes('/login') && !url?.includes('/register');
   return (
     <html lang="en">
       <body

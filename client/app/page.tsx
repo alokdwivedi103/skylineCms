@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <main>
       <Image alt='Home Banner' className="w-full lg:h-40 lg:object-fill object-contain" height={360} src={isMobile ? '/images/Home/homeBanner.webp' : '/images/Home/homeBannerDesktop.webp'} width={864}/>
-      <div className="container">
+      <div>
       <HomeTabs />
       <TopSellingAuthors />
       <TopSellingCategories />

@@ -9,7 +9,7 @@ export default function TopSellingAuthors() {
         <div className="flex flex-wrap gap-x-4 gap-y-11">
           {AUTHORS.map(author => (
             <div key={author.name} className="mx-auto">
-              <Image alt={author.name} className="w-24 h-24 object-cover hover:scale-125 transition-all duration-300" height={100} src={author.image} width={100} />
+              <Image alt={author.name} className="w-24 h-24 object-cover hover:scale-110 transition-transform duration-300" height={100} src={author.image} width={100} />
               <div className="mt-4 text-lg font-medium">{author.name}</div>
             </div>
           ))}
