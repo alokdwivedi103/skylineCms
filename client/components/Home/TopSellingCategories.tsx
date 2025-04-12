@@ -73,7 +73,7 @@ export default function TopSellingCategories() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((category) => (
             <div key={category._id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <div className="relative h-48">
+              <div className="relative h-48 w-full">
                 <Image
                   src={category.banner.includes('imagekit.io/tools/asset-public-link') 
                     ? JSON.parse(decodeURIComponent(category.banner.split('detail=')[1])).signedUrl 
@@ -88,7 +88,7 @@ export default function TopSellingCategories() {
               </div>
               
               <div className="p-6">
-                <p className="text-gray-600 mb-4">{category.description}</p>
+                <p className="text-gray-600 mb-4 h-20 overflow-y-auto">{category.description}</p>
                 
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <div className="text-center">

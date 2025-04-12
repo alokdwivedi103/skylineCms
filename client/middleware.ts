@@ -1,99 +1,115 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { userAgent } from 'next/server'
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { userAgent } from "next/server";
 
 // List of public routes that don't require authentication
 const publicRoutes = [
-  '/login',
-  '/register',
-  '/api/auth/login',
-  '/api/auth/register',
-  '/api/auth/verify-admin',
-]
+  "/login",
+  "/register",
+  "/api/auth/login",
+  "/api/auth/register",
+  "/api/auth/verify-admin",
+];
 
-// Function to check if a route is public
-const isPublicRoute = (path: string) => {
-  return publicRoutes.some(route => path.startsWith(route))
+function isPublicRoute(path: string) {
+  return publicRoutes.some((route) => path.startsWith(route));
 }
 
-// Function to check if a route is an API route
-const isApiRoute = (path: string) => {
-  return path.startsWith('/api/')
+function isApiRoute(path: string) {
+  return path.startsWith("/api/");
 }
 
-// Function to check if a route is a static file
-const isStaticFile = (path: string) => {
-  return /\.(jpg|jpeg|png|gif|ico|svg|css|js)$/.test(path)
+function isStaticFile(path: string) {
+  return /\.(jpg|jpeg|png|gif|ico|svg|css|js|webp)$/.test(path) || path.startsWith('/_next/image');
 }
 
 export async function middleware(request: NextRequest) {
-  // Handle device detection and headers
-  const requestHeaders = new Headers(request.headers)
-  const { device } = userAgent(request)
-  const isMobile = device.type === 'mobile'
-  const url = new URL(request.url)
-  const { origin } = url
-  const { pathname } = url
+  const { pathname } = request.nextUrl;
+  const requestHeaders = new Headers(request.headers);
+  const { device } = userAgent(request);
+  const isMobile = device.type === "mobile";
+  const url = new URL(request.url);
+  const { origin } = url;
 
-  requestHeaders.set('x-url', request.url.replace(origin, ''))
-  requestHeaders.set('x-origin', origin)
-  requestHeaders.set('x-pathname', pathname)
+  console.log(request.url, "request.url");
+
+  requestHeaders.set("x-url", request.url.replace(origin, ""));
+  requestHeaders.set("x-origin", origin);
+  requestHeaders.set("x-pathname", pathname);
 
   if (isMobile) {
-    requestHeaders.set('x-mobile', 'true')
+    requestHeaders.set("x-mobile", "true");
   }
 
+  if(request.url.includes("/login") || request.url.includes("/register")) {
+    const response = NextResponse.next();
+    response.cookies.delete("token");
+  }
   // Allow public routes, API routes, and static files
-  if (isPublicRoute(pathname) || isApiRoute(pathname) || isStaticFile(pathname)) {
+  if (
+    isPublicRoute(pathname) ||
+    isApiRoute(pathname) ||
+    isStaticFile(pathname)
+  ) {
     return NextResponse.next({
       request: {
         headers: requestHeaders,
       },
-    })
+    });
   }
 
-  // Get token from cookies
-  const token = request.cookies.get('token')?.value
+  // Get token from cookie
+  const token = request.cookies.get("token")?.value;
 
   // If no token, redirect to login
   if (!token) {
-    const loginUrl = new URL('/login', request.url)
-    loginUrl.searchParams.set('from', pathname)
-    return NextResponse.redirect(loginUrl)
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirectTo", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Verify token
   try {
-    const base64Url = token.split('.')[1]
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-    const payload = JSON.parse(atob(base64))
+    // Verify token
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const payload = JSON.parse(atob(base64));
 
     // Check if token is expired
     if (payload.exp && payload.exp < Date.now() / 1000) {
-      const loginUrl = new URL('/login', request.url)
-      loginUrl.searchParams.set('from', pathname)
-      return NextResponse.redirect(loginUrl)
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirectTo", pathname);
+      return NextResponse.redirect(loginUrl);
     }
 
-    // Add user info to request headers
-    requestHeaders.set('x-user-id', payload.userId)
-    requestHeaders.set('x-user-role', payload.role)
+    // Add user info to headers
+    requestHeaders.set("x-user-id", payload.userId);
+    requestHeaders.set("x-user-role", payload.role);
 
-    // Handle admin routes
-    if (pathname.startsWith('/admin') && payload.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url))
+    // Protect admin routes
+    if (pathname.startsWith("/admin") && payload.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
+    // Get device info
+    const { device } = userAgent(request);
+    const isMobile = device.type === "mobile";
+
+    // Add device info to headers
+    requestHeaders.set("x-mobile", isMobile.toString());
+
+    // Return response with modified headers
     return NextResponse.next({
       request: {
         headers: requestHeaders,
       },
-    })
+    });
   } catch (error) {
-    // If token is invalid, redirect to login
-    const loginUrl = new URL('/login', request.url)
-    loginUrl.searchParams.set('from', pathname)
-    return NextResponse.redirect(loginUrl)
+    console.error("Middleware error:", error);
+    // On error, redirect to login
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirectTo", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 }
 
@@ -104,8 +120,7 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
-}
+};

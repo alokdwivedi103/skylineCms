@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
 import Providers from "@/components/Providers";
+import { AuthProvider } from '@/context/AuthContext'
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   const url = headers().get("x-url");
+  console.log(url, 'url');
   
   const showHeaderFooter =
     !url?.includes("/login") && !url?.includes("/register");
@@ -39,12 +41,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Providers>
-          {showHeaderFooter && <Header />}
-          {children}
-          <Toaster />
-          {showHeaderFooter && <Footer />}
-        </Providers>
+        <AuthProvider token={headers().get("x-token") || ""}>
+          <Providers>
+            {showHeaderFooter && <Header />}
+            {children}
+            <Toaster />
+            {showHeaderFooter && <Footer />}
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   );

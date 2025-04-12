@@ -84,7 +84,7 @@ export function AuthProvider({ children, token }: AuthProviderProps) {
       setUser(null);
       setIsAuthenticated(false);
       setIsAdmin(false);
-      router.push("/login");
+      location.href = ("/login");
     } catch (error) {
       console.error("Logout error:", error);
     }

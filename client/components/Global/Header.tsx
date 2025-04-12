@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";
-import { LogOutIcon } from "lucide-react";
 
 import Sidebar from "./Sidebar";
+import LogoutButton from "./LogoutButton";
 
 export default function Header() {
   return (
@@ -17,11 +17,7 @@ export default function Header() {
           <Image alt="Logo" className="w-10 h-10 lg:size-12" height={50} src="/logo.webp" width={50} />
           Skyline Publications
         </Link>
-
-        <a className="mr-1 lg:text-primary-foreground lg:bg-primary flex gap-2 items-center shadow-sm lg:py-1.5 lg:px-3 h-auto rounded-md" href='/login'>
-          <LogOutIcon className="lg:size-3 size-5 shrink-0"/>
-          {headers().get('x-mobile') !== 'true' && <span>Logout</span>}
-        </a>
+        <LogoutButton />
       </div>
     </header>
   );
