@@ -31,7 +31,7 @@ export default function CategoriesPage() {
           throw new Error('Failed to fetch categories')
         }
         const data = await response.json()
-        setCategories(data)
+        setCategories(data.categories)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
       } finally {

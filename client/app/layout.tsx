@@ -10,6 +10,7 @@ import Footer from "@/components/Global/Footer";
 import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
+import Providers from "@/components/Providers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -22,12 +23,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const url = headers().get('x-url');
-  const showHeaderFooter = !url?.includes('/login') && !url?.includes('/register');
+  const url = headers().get("x-url");
+  
+  const showHeaderFooter =
+    !url?.includes("/login") && !url?.includes("/register");
   return (
     <html lang="en">
       <body
@@ -36,10 +39,12 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {showHeaderFooter && <Header />}
-        {children}
-        <Toaster />
-        {showHeaderFooter && <Footer />}
+        <Providers>
+          {showHeaderFooter && <Header />}
+          {children}
+          <Toaster />
+          {showHeaderFooter && <Footer />}
+        </Providers>
       </body>
     </html>
   );

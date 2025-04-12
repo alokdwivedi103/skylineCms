@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from "next/image";
 import {
@@ -11,6 +11,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useAuth } from '@/context/AuthContext'
 
 const OFFERINGS = [
   {
@@ -31,16 +32,19 @@ const OFFERINGS = [
 ];
 
 export default function LoginPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('from') || '/'
+  const { login } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
     setError('')
+    setLoading(true)
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -49,7 +53,7 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include'
+        credentials: 'include',
       })
 
       const data = await response.json()
@@ -58,14 +62,15 @@ export default function LoginPage() {
         throw new Error(data.error || 'Login failed')
       }
 
-      // If we get here, login was successful
-      // The cookie will be automatically set by the browser
-      // Force a hard navigation to home page
-      window.location.href = '/'
+      // Update auth context
+      login(data.user)
+
+      // Redirect to the requested page or home
+      location.href = redirectTo
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
@@ -126,8 +131,9 @@ export default function LoginPage() {
                       id="email"
                       name="email"
                       type="email"
+                      autoComplete="email"
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primaryColor focus:border-primaryColor focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
                       placeholder="Email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -141,8 +147,9 @@ export default function LoginPage() {
                       id="password"
                       name="password"
                       type="password"
+                      autoComplete="current-password"
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primaryColor focus:border-primaryColor focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -153,19 +160,19 @@ export default function LoginPage() {
                 <div>
                   <button
                     type="submit"
-                    disabled={isLoading}
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primaryColor hover:bg-primaryColor/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primaryColor"
+                    disabled={loading}
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                   >
-                    {isLoading ? 'Signing in...' : 'Sign in'}
+                    {loading ? 'Signing in...' : 'Sign in'}
                   </button>
                 </div>
 
                 <div className="text-sm text-center">
                   <Link
                     href="/register"
-                    className="font-medium text-primaryColor hover:text-primaryColor/90"
+                    className="font-medium text-primary hover:text-primary/90"
                   >
-                    Don&apos;t have an account? Register
+                    Don't have an account? Register
                   </Link>
                 </div>
               </form>

@@ -1,18 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { HomeIcon, LogInIcon, LogOutIcon, SidebarClose, SidebarOpen } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState } from 'react'
+import { HomeIcon, SidebarOpen } from "lucide-react";
 import Link from 'next/link'
 
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useAuth } from '@/context/AuthContext';
 
 const SIDEBAR_LIST = [
   {
@@ -22,52 +21,9 @@ const SIDEBAR_LIST = [
   },
 ];
 
-export default function Sidebar({ headers }: { headers: string }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
-
-  useEffect(() => {
-    const getToken = () => {
-      const cookies = document.cookie.split(';')
-      for (let cookie of cookies) {
-        const [name, value] = cookie.trim().split('=')
-        if (name === 'token') {
-          return value
-        }
-      }
-      return null
-    }
-
-    const token = getToken()
-
-    if (token) {
-      try {
-        const base64Url = token.split('.')[1]
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-        const payload = JSON.parse(atob(base64))
-        
-        setIsAuthenticated(true)
-        if (payload.role === 'admin') {
-          setIsAdmin(true)
-        }
-      } catch (error) {
-        console.error('Error parsing token:', error)
-      }
-    }
-  }, [])
-
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-      })
-      setIsAuthenticated(false)
-      setIsAdmin(false)
-      window.location.href = '/'
-    } catch (error) {
-      console.error('Logout error:', error)
-    }
-  }
+export default function Sidebar({ role, userId }: { role: string, userId: string }) {
+  const auth = useAuth();
+  const isAdmin = auth.user?.role === "admin";
 
   return (
     <Sheet>
@@ -111,24 +67,6 @@ export default function Sidebar({ headers }: { headers: string }) {
                 <span>Add Category</span>
               </Link>
             </>
-          )}
-
-          {isAuthenticated ? (
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 w-full"
-            >
-              <LogOutIcon className="w-5 h-5" />
-              <span>Logout</span>
-            </button>
-          ) : (
-            <Link
-              href="/login"
-              className="flex items-center space-x-2 px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100"
-            >
-              <LogInIcon className="w-5 h-5" />
-              <span>Login</span>
-            </Link>
           )}
         </div>
       </SheetContent>
