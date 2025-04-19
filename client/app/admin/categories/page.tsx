@@ -1,46 +1,46 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { imageSrcHelper } from "@/utils/imageSrcHelper";
 interface Category {
-  id: number
-  slug: string
-  name: string
-  description: string
-  image: string
-  banner: string
+  id: number;
+  slug: string;
+  name: string;
+  description: string;
+  image: string;
+  banner: string;
   stats: {
-    books: string
-    authors: string
-    bestSellers: string
-  }
+    books: string;
+    authors: string;
+    bestSellers: string;
+  };
 }
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/api/category')
+        const response = await fetch("/api/category");
         if (!response.ok) {
-          throw new Error('Failed to fetch categories')
+          throw new Error("Failed to fetch categories");
         }
-        const data = await response.json()
-        setCategories(data.categories)
+        const data = await response.json();
+        setCategories(data.categories);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred')
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
 
   if (loading) {
     return (
@@ -50,7 +50,7 @@ export default function CategoriesPage() {
           <p className="mt-4 text-gray-600">Loading categories...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -60,7 +60,7 @@ export default function CategoriesPage() {
           <p className="text-red-600">{error}</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -72,8 +72,18 @@ export default function CategoriesPage() {
             href="/admin/categories/add"
             className="bg-primaryColor text-white px-4 py-2 rounded-md hover:bg-primaryColor/90 transition-colors flex items-center space-x-2"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             <span>Add Category</span>
           </Link>
@@ -81,34 +91,44 @@ export default function CategoriesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <div key={category.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div
+              key={category.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden"
+            >
               <div className="relative h-48">
                 <Image
-                  src={category.banner.includes('imagekit.io/tools/asset-public-link') 
-                    ? JSON.parse(decodeURIComponent(category.banner.split('detail=')[1])).signedUrl 
-                    : category.banner}                  alt={category.name}
+                  src={imageSrcHelper(category.banner)}
+                  alt={category.name}
                   fill
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <h2 className="text-2xl font-bold text-white">{category.name}</h2>
+                  <h2 className="text-2xl font-bold text-white">
+                    {category.name}
+                  </h2>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <p className="text-gray-600 mb-4">{category.description}</p>
-                
+
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <div className="text-center">
-                    <div className="text-lg font-bold text-primaryColor">{category.stats.books}</div>
+                    <div className="text-lg font-bold text-primaryColor">
+                      {category.stats.books}
+                    </div>
                     <div className="text-sm text-gray-500">Books</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-bold text-primaryColor">{category.stats.authors}</div>
+                    <div className="text-lg font-bold text-primaryColor">
+                      {category.stats.authors}
+                    </div>
                     <div className="text-sm text-gray-500">Authors</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-bold text-primaryColor">{category.stats.bestSellers}</div>
+                    <div className="text-lg font-bold text-primaryColor">
+                      {category.stats.bestSellers}
+                    </div>
                     <div className="text-sm text-gray-500">Best Sellers</div>
                   </div>
                 </div>
@@ -135,5 +155,5 @@ export default function CategoriesPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}
